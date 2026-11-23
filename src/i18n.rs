@@ -1,0 +1,991 @@
+use eframe::egui::{pos2, vec2, Color32, Painter, Pos2, Rect, Stroke};
+use std::f32::consts::TAU;
+
+#[derive(Clone, Copy, PartialEq, Eq)]
+pub enum Language {
+    En,
+    Fr,
+    It,
+    Es,
+    Zh,
+    Ru,
+}
+
+impl Language {
+    pub fn code(self) -> &'static str {
+        match self {
+            Self::En => "en",
+            Self::Fr => "fr",
+            Self::It => "it",
+            Self::Es => "es",
+            Self::Zh => "zh",
+            Self::Ru => "ru",
+        }
+    }
+
+    pub fn name(self) -> &'static str {
+        match self {
+            Self::En => "English",
+            Self::Fr => "Français",
+            Self::It => "Italiano",
+            Self::Es => "Español",
+            Self::Zh => "中文",
+            Self::Ru => "Русский",
+        }
+    }
+
+    pub fn from_code(code: &str) -> Self {
+        match code {
+            "fr" => Self::Fr,
+            "it" => Self::It,
+            "es" => Self::Es,
+            "zh" => Self::Zh,
+            "ru" => Self::Ru,
+            _ => Self::En,
+        }
+    }
+}
+
+pub fn draw_language_flag(p: &Painter, c: Pos2, language: Language, size: f32) {
+    let w = size * 1.5;
+    let h = size;
+    let r = Rect::from_center_size(c, vec2(w, h));
+    p.rect_filled(r, 2.0, Color32::WHITE);
+    match language {
+        Language::Fr => {
+            p.rect_filled(
+                Rect::from_min_size(r.min, vec2(w / 3.0, h)),
+                0.0,
+                Color32::from_rgb(0, 85, 164),
+            );
+            p.rect_filled(
+                Rect::from_min_size(pos2(r.left() + w * 2.0 / 3.0, r.top()), vec2(w / 3.0, h)),
+                0.0,
+                Color32::from_rgb(239, 65, 53),
+            );
+        }
+        Language::It => {
+            p.rect_filled(
+                Rect::from_min_size(r.min, vec2(w / 3.0, h)),
+                0.0,
+                Color32::from_rgb(0, 146, 70),
+            );
+            p.rect_filled(
+                Rect::from_min_size(pos2(r.left() + w * 2.0 / 3.0, r.top()), vec2(w / 3.0, h)),
+                0.0,
+                Color32::from_rgb(206, 43, 55),
+            );
+        }
+        Language::Es => {
+            p.rect_filled(r, 0.0, Color32::from_rgb(170, 21, 27));
+            p.rect_filled(
+                Rect::from_min_size(pos2(r.left(), r.top() + h * 0.25), vec2(w, h * 0.5)),
+                0.0,
+                Color32::from_rgb(247, 205, 47),
+            );
+            p.rect_filled(
+                Rect::from_center_size(pos2(r.left() + w * 0.30, c.y), vec2(w * 0.12, h * 0.36)),
+                1.0,
+                Color32::from_rgb(155, 70, 49),
+            );
+        }
+        Language::Zh => {
+            p.rect_filled(r, 1.5, Color32::from_rgb(238, 28, 37));
+            p.circle_filled(
+                pos2(r.left() + w * 0.27, r.top() + h * 0.38),
+                size * 0.07,
+                Color32::from_rgb(255, 222, 0),
+            );
+            for k in 0..4 {
+                let a = k as f32 * TAU / 4.0 - 0.35;
+                p.circle_filled(
+                    pos2(
+                        r.left() + w * 0.43 + a.cos() * w * 0.11,
+                        r.top() + h * 0.25 + a.sin() * h * 0.18,
+                    ),
+                    size * 0.025,
+                    Color32::from_rgb(255, 222, 0),
+                );
+            }
+        }
+        Language::Ru => {
+            p.rect_filled(
+                Rect::from_min_size(r.min, vec2(w, h / 3.0)),
+                0.0,
+                Color32::from_rgb(255, 255, 255),
+            );
+            p.rect_filled(
+                Rect::from_min_size(pos2(r.left(), r.top() + h / 3.0), vec2(w, h / 3.0)),
+                0.0,
+                Color32::from_rgb(33, 87, 164),
+            );
+            p.rect_filled(
+                Rect::from_min_size(pos2(r.left(), r.top() + h * 2.0 / 3.0), vec2(w, h / 3.0)),
+                0.0,
+                Color32::from_rgb(210, 36, 48),
+            );
+        }
+        Language::En => {
+            p.rect_filled(r, 2.0, Color32::from_rgb(1, 33, 105));
+            p.rect_filled(
+                Rect::from_min_size(pos2(r.left() + w * 0.42, r.top()), vec2(w * 0.16, h)),
+                0.0,
+                Color32::WHITE,
+            );
+            p.rect_filled(
+                Rect::from_min_size(pos2(r.left(), r.top() + h * 0.36), vec2(w, h * 0.28)),
+                0.0,
+                Color32::WHITE,
+            );
+            p.rect_filled(
+                Rect::from_min_size(pos2(r.left() + w * 0.45, r.top()), vec2(w * 0.10, h)),
+                0.0,
+                Color32::from_rgb(200, 16, 46),
+            );
+            p.rect_filled(
+                Rect::from_min_size(pos2(r.left(), r.top() + h * 0.43), vec2(w, h * 0.14)),
+                0.0,
+                Color32::from_rgb(200, 16, 46),
+            );
+            p.line_segment(
+                [pos2(r.left() + 1.0, r.top()), pos2(r.right() - 1.0, r.bottom())],
+                Stroke::new(3.2_f32, Color32::WHITE),
+            );
+            p.line_segment(
+                [pos2(r.right() - 1.0, r.top()), pos2(r.left() + 1.0, r.bottom())],
+                Stroke::new(3.2_f32, Color32::WHITE),
+            );
+            p.line_segment(
+                [pos2(r.left() + 1.0, r.top()), pos2(r.right() - 1.0, r.bottom())],
+                Stroke::new(1.1_f32, Color32::from_rgb(200, 16, 46)),
+            );
+            p.line_segment(
+                [pos2(r.right() - 1.0, r.top()), pos2(r.left() + 1.0, r.bottom())],
+                Stroke::new(1.1_f32, Color32::from_rgb(200, 16, 46)),
+            );
+        }
+    }
+    p.rect_stroke(r.shrink(0.5), 2.0, Stroke::new(0.7_f32, Color32::from_black_alpha(80)));
+}
+
+pub fn tr(lang: Language, key: &str) -> &'static str {
+    match key {
+        "home" => match lang {
+            Language::En => "Home",
+            Language::Fr => "Accueil",
+            Language::It => "Home",
+            Language::Es => "Inicio",
+            Language::Zh => "首页",
+            Language::Ru => "Главная",
+        },
+        "search" => match lang {
+            Language::En => "Search",
+            Language::Fr => "Rechercher",
+            Language::It => "Cerca",
+            Language::Es => "Buscar",
+            Language::Zh => "搜索",
+            Language::Ru => "Поиск",
+        },
+        "library" => match lang {
+            Language::En => "Library",
+            Language::Fr => "Bibliothèque",
+            Language::It => "Biblioteca",
+            Language::Es => "Biblioteca",
+            Language::Zh => "音乐库",
+            Language::Ru => "Библиотека",
+        },
+        "guest" => match lang {
+            Language::En => "Guest",
+            Language::Fr => "Invité",
+            Language::It => "Ospite",
+            Language::Es => "Invitado",
+            Language::Zh => "访客",
+            Language::Ru => "Гость",
+        },
+        "new_profile" => match lang {
+            Language::En => "New profile",
+            Language::Fr => "Nouveau profil",
+            Language::It => "Nuovo profilo",
+            Language::Es => "Nuevo perfil",
+            Language::Zh => "新建个人资料",
+            Language::Ru => "Новый профиль",
+        },
+        "edit_profile" => match lang {
+            Language::En => "Edit profile",
+            Language::Fr => "Modifier le profil",
+            Language::It => "Modifica profilo",
+            Language::Es => "Editar perfil",
+            Language::Zh => "编辑个人资料",
+            Language::Ru => "Изменить профиль",
+        },
+        "delete_profile" => match lang {
+            Language::En => "Delete profile",
+            Language::Fr => "Supprimer le profil",
+            Language::It => "Elimina profilo",
+            Language::Es => "Eliminar perfil",
+            Language::Zh => "删除个人资料",
+            Language::Ru => "Удалить профиль",
+        },
+        "change_profile" => match lang {
+            Language::En => "CHANGE PROFILE",
+            Language::Fr => "CHANGER DE PROFIL",
+            Language::It => "CAMBIA PROFILO",
+            Language::Es => "CAMBIAR PERFIL",
+            Language::Zh => "切换个人资料",
+            Language::Ru => "СМЕНИТЬ ПРОФИЛЬ",
+        },
+        "language" => match lang {
+            Language::En => "Language",
+            Language::Fr => "Langue",
+            Language::It => "Lingua",
+            Language::Es => "Idioma",
+            Language::Zh => "语言",
+            Language::Ru => "Язык",
+        },
+        "theme" => match lang {
+            Language::En => "THEME COLOR",
+            Language::Fr => "COULEUR DU THÈME",
+            Language::It => "COLORE DEL TEMA",
+            Language::Es => "COLOR DEL TEMA",
+            Language::Zh => "主题颜色",
+            Language::Ru => "ЦВЕТ ТЕМЫ",
+        },
+        "for_you" => match lang {
+            Language::En => "For you",
+            Language::Fr => "Pour vous",
+            Language::It => "Per te",
+            Language::Es => "Para ti",
+            Language::Zh => "为你推荐",
+            Language::Ru => "Для вас",
+        },
+        "for_me" => match lang {
+            Language::En => "For me",
+            Language::Fr => "Pour moi",
+            Language::It => "Per me",
+            Language::Es => "Para mí",
+            Language::Zh => "我的偏好",
+            Language::Ru => "Для меня",
+        },
+        "show_all" => match lang {
+            Language::En => "SHOW ALL",
+            Language::Fr => "TOUT VOIR",
+            Language::It => "MOSTRA TUTTO",
+            Language::Es => "VER TODO",
+            Language::Zh => "查看全部",
+            Language::Ru => "ПОКАЗАТЬ ВСЁ",
+        },
+        "collapse" => match lang {
+            Language::En => "COLLAPSE",
+            Language::Fr => "RÉDUIRE",
+            Language::It => "RIDUCI",
+            Language::Es => "REPLEGAR",
+            Language::Zh => "收起",
+            Language::Ru => "Свернуть",
+        },
+        "top_week" => match lang {
+            Language::En => "Top of the week",
+            Language::Fr => "Top de la semaine",
+            Language::It => "Classifica della settimana",
+            Language::Es => "Lo mejor de la semana",
+            Language::Zh => "本周热门",
+            Language::Ru => "Лучшее недели",
+        },
+        "read_all" => match lang {
+            Language::En => "READ ALL",
+            Language::Fr => "TOUT LIRE",
+            Language::It => "LEGGI TUTTO",
+            Language::Es => "LEER TODO",
+            Language::Zh => "播放全部",
+            Language::Ru => "ЧИТАТЬ ВСЁ",
+        },
+        "lyrics" => match lang {
+            Language::En => "Lyrics",
+            Language::Fr => "Paroles",
+            Language::It => "Testi",
+            Language::Es => "Letras",
+            Language::Zh => "歌词",
+            Language::Ru => "Текст",
+        },
+        "hide_lyrics" => match lang {
+            Language::En => "Hide lyrics",
+            Language::Fr => "Masquer les paroles",
+            Language::It => "Nascondi testo",
+            Language::Es => "Ocultar letras",
+            Language::Zh => "隐藏歌词",
+            Language::Ru => "Скрыть текст",
+        },
+        "pause" => match lang {
+            Language::En => "Pause",
+            Language::Fr => "Pause",
+            Language::It => "Pausa",
+            Language::Es => "Pausa",
+            Language::Zh => "暂停",
+            Language::Ru => "Пауза",
+        },
+        "play" => match lang {
+            Language::En => "Play",
+            Language::Fr => "Lecture",
+            Language::It => "Ascolta",
+            Language::Es => "Reproducir",
+            Language::Zh => "播放",
+            Language::Ru => "Слушать",
+        },
+        "liked" => match lang {
+            Language::En => "Liked",
+            Language::Fr => "Titres aimés",
+            Language::It => "Preferiti",
+            Language::Es => "Favoritos",
+            Language::Zh => "已喜欢",
+            Language::Ru => "Избранное",
+        },
+        "playlists" => match lang {
+            Language::En => "Playlists",
+            Language::Fr => "Playlists",
+            Language::It => "Playlist",
+            Language::Es => "Listas",
+            Language::Zh => "播放列表",
+            Language::Ru => "Плейлисты",
+        },
+        "playlist" => match lang {
+            Language::En => "PLAYLIST",
+            Language::Fr => "PLAYLIST",
+            Language::It => "PLAYLIST",
+            Language::Es => "LISTA",
+            Language::Zh => "播放列表",
+            Language::Ru => "ПЛЕЙЛИСТ",
+        },
+        "add_to_playlist" => match lang {
+            Language::En => "ADD TO PLAYLIST",
+            Language::Fr => "AJOUTER À UNE PLAYLIST",
+            Language::It => "AGGIUNGI ALLA PLAYLIST",
+            Language::Es => "AÑADIR A UNA LISTA",
+            Language::Zh => "添加到播放列表",
+            Language::Ru => "ДОБАВИТЬ В ПЛЕЙЛИСТ",
+        },
+        "cancel" => match lang {
+            Language::En => "Cancel",
+            Language::Fr => "Annuler",
+            Language::It => "Annulla",
+            Language::Es => "Cancelar",
+            Language::Zh => "取消",
+            Language::Ru => "Отмена",
+        },
+        "back" => match lang {
+            Language::En => "Back",
+            Language::Fr => "Retour",
+            Language::It => "Indietro",
+            Language::Es => "Atrás",
+            Language::Zh => "返回",
+            Language::Ru => "Назад",
+        },
+        "continue" => match lang {
+            Language::En => "Continue",
+            Language::Fr => "Continuer",
+            Language::It => "Continua",
+            Language::Es => "Continuar",
+            Language::Zh => "继续",
+            Language::Ru => "Продолжить",
+        },
+        "save" => match lang {
+            Language::En => "Save",
+            Language::Fr => "Enregistrer",
+            Language::It => "Salva",
+            Language::Es => "Guardar",
+            Language::Zh => "保存",
+            Language::Ru => "Сохранить",
+        },
+        "delete" => match lang {
+            Language::En => "Delete",
+            Language::Fr => "Supprimer",
+            Language::It => "Elimina",
+            Language::Es => "Eliminar",
+            Language::Zh => "删除",
+            Language::Ru => "Удалить",
+        },
+        "create_profile" => match lang {
+            Language::En => "Create profile",
+            Language::Fr => "Créer le profil",
+            Language::It => "Crea profilo",
+            Language::Es => "Crear perfil",
+            Language::Zh => "创建个人资料",
+            Language::Ru => "Создать профиль",
+        },
+        "mini_player" => match lang {
+            Language::En => "Mini player",
+            Language::Fr => "Mini lecteur",
+            Language::It => "Mini lettore",
+            Language::Es => "Mini reproductor",
+            Language::Zh => "迷你播放器",
+            Language::Ru => "Мини-плеер",
+        },
+        "no_track" => match lang {
+            Language::En => "No track",
+            Language::Fr => "Aucun titre",
+            Language::It => "Nessun brano",
+            Language::Es => "Ninguna canción",
+            Language::Zh => "没有曲目",
+            Language::Ru => "Нет трека",
+        },
+        "nothing_playing" => match lang {
+            Language::En => "Nothing playing",
+            Language::Fr => "Rien en lecture",
+            Language::It => "Niente in riproduzione",
+            Language::Es => "No hay reproducción",
+            Language::Zh => "未播放",
+            Language::Ru => "Ничего не играет",
+        },
+        "loading" => match lang {
+            Language::En => "Loading…",
+            Language::Fr => "Chargement…",
+            Language::It => "Caricamento…",
+            Language::Es => "Cargando…",
+            Language::Zh => "加载中…",
+            Language::Ru => "Загрузка…",
+        },
+        "play_error" => match lang {
+            Language::En => "Playback error",
+            Language::Fr => "Erreur de lecture",
+            Language::It => "Errore di riproduzione",
+            Language::Es => "Error de reproducción",
+            Language::Zh => "播放错误",
+            Language::Ru => "Ошибка воспроизведения",
+        },
+        "choose_profile" => match lang {
+            Language::En => "Who is listening?",
+            Language::Fr => "Qui écoute ?",
+            Language::It => "Chi ascolta?",
+            Language::Es => "¿Quién escucha?",
+            Language::Zh => "谁在听音乐？",
+            Language::Ru => "Кто слушает?",
+        },
+        "welcome" => match lang {
+            Language::En => "WELCOME",
+            Language::Fr => "BIENVENUE",
+            Language::It => "BENVENUTO",
+            Language::Es => "BIENVENIDO",
+            Language::Zh => "欢迎",
+            Language::Ru => "ДОБРО ПОЖАЛОВАТЬ",
+        },
+        "no_profile" => match lang {
+            Language::En => "No profile",
+            Language::Fr => "Sans profil",
+            Language::It => "Nessun profilo",
+            Language::Es => "Sin perfil",
+            Language::Zh => "无个人资料",
+            Language::Ru => "Без профиля",
+        },
+        "guest_mode" => match lang {
+            Language::En => "Guest mode",
+            Language::Fr => "Mode invité",
+            Language::It => "Modalità ospite",
+            Language::Es => "Modo invitado",
+            Language::Zh => "访客模式",
+            Language::Ru => "Режим гостя",
+        },
+        "nothing_saved" => match lang {
+            Language::En => "Nothing is saved in guest mode",
+            Language::Fr => "Rien n'est conservé en mode invité",
+            Language::It => "Niente viene salvato in modalità ospite",
+            Language::Es => "No se guarda nada en modo invitado",
+            Language::Zh => "访客模式不会保存内容",
+            Language::Ru => "В гостевом режиме ничего не сохраняется",
+        },
+        "choose_track" => match lang {
+            Language::En => "Choose a track",
+            Language::Fr => "Choisis un titre",
+            Language::It => "Scegli un brano",
+            Language::Es => "Elige una canción",
+            Language::Zh => "选择曲目",
+            Language::Ru => "Выберите трек",
+        },
+        "start_from" => match lang {
+            Language::En => "Start from For you or the weekly chart",
+            Language::Fr => "Lance-en un depuis « Pour vous » ou le top de la semaine",
+            Language::It => "Avvia da Per te o dalla classifica della settimana",
+            Language::Es => "Inicia desde Para ti o el ranking semanal",
+            Language::Zh => "从“为你推荐”或本周热门开始播放",
+            Language::Ru => "Начните из «Для вас» или списка недели",
+        },
+        "listening" => match lang {
+            Language::En => "NOW PLAYING",
+            Language::Fr => "À L'ÉCOUTE",
+            Language::It => "IN RIPRODUZIONE",
+            Language::Es => "REPRODUCIENDO",
+            Language::Zh => "正在播放",
+            Language::Ru => "СЕЙЧАС ИГРАЕТ",
+        },
+        "nothing" => match lang {
+            Language::En => "NOTHING PLAYING",
+            Language::Fr => "RIEN EN LECTURE",
+            Language::It => "NULLA IN RIPRODUZIONE",
+            Language::Es => "NADA EN REPRODUCCIÓN",
+            Language::Zh => "暂无播放",
+            Language::Ru => "НИЧЕГО НЕ ИГРАЕТ",
+        },
+        "add_playlist" => match lang {
+            Language::En => "Add to playlist",
+            Language::Fr => "Ajouter à une playlist",
+            Language::It => "Aggiungi alla playlist",
+            Language::Es => "Añadir a una lista",
+            Language::Zh => "添加到播放列表",
+            Language::Ru => "Добавить в плейлист",
+        },
+        "remove_liked" => match lang {
+            Language::En => "Remove from liked",
+            Language::Fr => "Retirer des j'aime",
+            Language::It => "Rimuovi dai preferiti",
+            Language::Es => "Quitar de favoritos",
+            Language::Zh => "取消喜欢",
+            Language::Ru => "Удалить из избранного",
+        },
+        "like" => match lang {
+            Language::En => "Like",
+            Language::Fr => "J'aime",
+            Language::It => "Mi piace",
+            Language::Es => "Me gusta",
+            Language::Zh => "喜欢",
+            Language::Ru => "Нравится",
+        },
+        "no_track_moment" => match lang {
+            Language::En => "No tracks at the moment",
+            Language::Fr => "Aucun titre pour le moment",
+            Language::It => "Nessun brano al momento",
+            Language::Es => "No hay canciones por ahora",
+            Language::Zh => "暂时没有曲目",
+            Language::Ru => "Сейчас нет треков",
+        },
+        "no_liked" => match lang {
+            Language::En => "No liked tracks yet",
+            Language::Fr => "Aucun titre aimé pour le moment",
+            Language::It => "Nessun preferito",
+            Language::Es => "No hay favoritos",
+            Language::Zh => "暂无喜欢的曲目",
+            Language::Ru => "Нет избранных треков",
+        },
+        "no_results" => match lang {
+            Language::En => "No results",
+            Language::Fr => "Aucun résultat",
+            Language::It => "Nessun risultato",
+            Language::Es => "No hay resultados",
+            Language::Zh => "没有结果",
+            Language::Ru => "Нет результатов",
+        },
+        "results" => match lang {
+            Language::En => "Results",
+            Language::Fr => "Résultats",
+            Language::It => "Risultati",
+            Language::Es => "Resultados",
+            Language::Zh => "结果",
+            Language::Ru => "Результаты",
+        },
+        "searching" => match lang {
+            Language::En => "SEARCHING…",
+            Language::Fr => "RECHERCHE…",
+            Language::It => "RICERCA…",
+            Language::Es => "BUSCANDO…",
+            Language::Zh => "搜索中…",
+            Language::Ru => "ПОИСК…",
+        },
+        "new_playlist" => match lang {
+            Language::En => "New playlist",
+            Language::Fr => "Nouvelle playlist",
+            Language::It => "Nuova playlist",
+            Language::Es => "Nueva lista",
+            Language::Zh => "新建播放列表",
+            Language::Ru => "Новый плейлист",
+        },
+        "your_playlists" => match lang {
+            Language::En => "Your playlists",
+            Language::Fr => "Tes playlists",
+            Language::It => "Le tue playlist",
+            Language::Es => "Tus listas",
+            Language::Zh => "你的播放列表",
+            Language::Ru => "Ваши плейлисты",
+        },
+        "rename" => match lang {
+            Language::En => "Rename",
+            Language::Fr => "Renommer",
+            Language::It => "Rinomina",
+            Language::Es => "Cambiar nombre",
+            Language::Zh => "重命名",
+            Language::Ru => "Переименовать",
+        },
+        "confirm" => match lang {
+            Language::En => "Confirm?",
+            Language::Fr => "Confirmer ?",
+            Language::It => "Confermi?",
+            Language::Es => "¿Confirmar?",
+            Language::Zh => "确认？",
+            Language::Ru => "Подтвердить?",
+        },
+        "empty_playlist" => match lang {
+            Language::En => "Empty playlist",
+            Language::Fr => "Playlist vide",
+            Language::It => "Playlist vuota",
+            Language::Es => "Lista vacía",
+            Language::Zh => "播放列表为空",
+            Language::Ru => "Плейлист пуст",
+        },
+        "play_next" => match lang {
+            Language::En => "Play next",
+            Language::Fr => "Lire ensuite",
+            Language::It => "Riproduci dopo",
+            Language::Es => "Reproducir después",
+            Language::Zh => "下一首播放",
+            Language::Ru => "Воспроизвести следующим",
+        },
+        "share" => match lang {
+            Language::En => "Share",
+            Language::Fr => "Partager",
+            Language::It => "Condividi",
+            Language::Es => "Compartir",
+            Language::Zh => "分享",
+            Language::Ru => "Поделиться",
+        },
+        "link_copied" => match lang {
+            Language::En => "Link copied",
+            Language::Fr => "Lien copié",
+            Language::It => "Link copiato",
+            Language::Es => "Enlace copiado",
+            Language::Zh => "链接已复制",
+            Language::Ru => "Ссылка скопирована",
+        },
+        "create" => match lang {
+            Language::En => "Create",
+            Language::Fr => "Créer",
+            Language::It => "Crea",
+            Language::Es => "Crear",
+            Language::Zh => "创建",
+            Language::Ru => "Создать",
+        },
+        "close" => match lang {
+            Language::En => "Close",
+            Language::Fr => "Fermer",
+            Language::It => "Chiudi",
+            Language::Es => "Cerrar",
+            Language::Zh => "关闭",
+            Language::Ru => "Закрыть",
+        },
+        "other_color" => match lang {
+            Language::En => "Choose another color",
+            Language::Fr => "Choisir une autre couleur",
+            Language::It => "Scegli un altro colore",
+            Language::Es => "Elegir otro color",
+            Language::Zh => "选择其他颜色",
+            Language::Ru => "Выбрать другой цвет",
+        },
+        "discord_tip" => match lang {
+            Language::En => "Shows the current track on your Discord profile",
+            Language::Fr => "Affiche le titre en cours sur ton profil Discord",
+            Language::It => "Mostra il brano sul profilo Discord",
+            Language::Es => "Muestra la canción actual en Discord",
+            Language::Zh => "在 Discord 个人资料中显示当前曲目",
+            Language::Ru => "Показывает текущий трек в профиле Discord",
+        },
+        "confirmation_delete" => match lang {
+            Language::En => "Confirm deletion",
+            Language::Fr => "Confirmer la suppression",
+            Language::It => "Conferma eliminazione",
+            Language::Es => "Confirmar eliminación",
+            Language::Zh => "确认删除",
+            Language::Ru => "Подтвердить удаление",
+        },
+        "recent" => match lang {
+            Language::En => "RECENT",
+            Language::Fr => "RÉCENTES",
+            Language::It => "RECENTI",
+            Language::Es => "RECIENTES",
+            Language::Zh => "最近",
+            Language::Ru => "НЕДАВНИЕ",
+        },
+        "clear" => match lang {
+            Language::En => "CLEAR",
+            Language::Fr => "EFFACER",
+            Language::It => "CANCELLA",
+            Language::Es => "BORRAR",
+            Language::Zh => "清除",
+            Language::Ru => "ОЧИСТИТЬ",
+        },
+        "recent_title" => match lang {
+            Language::En => "Recently viewed",
+            Language::Fr => "Récemment consultés",
+            Language::It => "Visualizzati di recente",
+            Language::Es => "Consultados recientemente",
+            Language::Zh => "最近查看",
+            Language::Ru => "Недавно просмотренные",
+        },
+        "selection" => match lang {
+            Language::En => "SELECTION",
+            Language::Fr => "SÉLECTION",
+            Language::It => "SELEZIONE",
+            Language::Es => "SELECCIÓN",
+            Language::Zh => "已选择",
+            Language::Ru => "ВЫБОР",
+        },
+        "album" => match lang {
+            Language::En => "ALBUM",
+            Language::Fr => "ALBUM",
+            Language::It => "ALBUM",
+            Language::Es => "ÁLBUM",
+            Language::Zh => "专辑",
+            Language::Ru => "АЛЬБОМ",
+        },
+        "load_error" => match lang {
+            Language::En => "Could not load tracks",
+            Language::Fr => "Impossible de charger les titres",
+            Language::It => "Impossibile caricare i brani",
+            Language::Es => "No se pudieron cargar las canciones",
+            Language::Zh => "无法加载曲目",
+            Language::Ru => "Не удалось загрузить треки",
+        },
+        "retry" => match lang {
+            Language::En => "Try again",
+            Language::Fr => "Réessayer",
+            Language::It => "Riprova",
+            Language::Es => "Reintentar",
+            Language::Zh => "重试",
+            Language::Ru => "Повторить",
+        },
+        "later" => match lang {
+            Language::En => "Later",
+            Language::Fr => "Plus tard",
+            Language::It => "Più tardi",
+            Language::Es => "Más tarde",
+            Language::Zh => "稍后",
+            Language::Ru => "Позже",
+        },
+        "install" => match lang {
+            Language::En => "Install",
+            Language::Fr => "Installer",
+            Language::It => "Installa",
+            Language::Es => "Instalar",
+            Language::Zh => "安装",
+            Language::Ru => "Установить",
+        },
+        "finish" => match lang {
+            Language::En => "Finish",
+            Language::Fr => "Terminer",
+            Language::It => "Fine",
+            Language::Es => "Finalizar",
+            Language::Zh => "完成",
+            Language::Ru => "Завершить",
+        },
+        "configuration" => match lang {
+            Language::En => "CONFIGURATION",
+            Language::Fr => "CONFIGURATION",
+            Language::It => "CONFIGURAZIONE",
+            Language::Es => "CONFIGURACIÓN",
+            Language::Zh => "配置",
+            Language::Ru => "НАСТРОЙКА",
+        },
+        "components_missing" => match lang {
+            Language::En => "Missing components",
+            Language::Fr => "Composants manquants",
+            Language::It => "Componenti mancanti",
+            Language::Es => "Componentes faltantes",
+            Language::Zh => "缺少组件",
+            Language::Ru => "Отсутствуют компоненты",
+        },
+        "not_found" => match lang {
+            Language::En => "Not found",
+            Language::Fr => "Introuvable",
+            Language::It => "Non trovato",
+            Language::Es => "No encontrado",
+            Language::Zh => "未找到",
+            Language::Ru => "Не найдено",
+        },
+        "installation" => match lang {
+            Language::En => "INSTALLATION",
+            Language::Fr => "INSTALLATION",
+            Language::It => "INSTALLAZIONE",
+            Language::Es => "INSTALACIÓN",
+            Language::Zh => "安装",
+            Language::Ru => "УСТАНОВКА",
+        },
+        "installing" => match lang {
+            Language::En => "Installation in progress",
+            Language::Fr => "Installation en cours",
+            Language::It => "Installazione in corso",
+            Language::Es => "Instalación en curso",
+            Language::Zh => "正在安装",
+            Language::Ru => "Установка выполняется",
+        },
+        "done" => match lang {
+            Language::En => "DONE",
+            Language::Fr => "TERMINÉ",
+            Language::It => "COMPLETATO",
+            Language::Es => "TERMINADO",
+            Language::Zh => "完成",
+            Language::Ru => "ГОТОВО",
+        },
+        "installed" => match lang {
+            Language::En => "Installation complete",
+            Language::Fr => "Installation terminée",
+            Language::It => "Installazione completata",
+            Language::Es => "Instalación finalizada",
+            Language::Zh => "安装完成",
+            Language::Ru => "Установка завершена",
+        },
+        "error" => match lang {
+            Language::En => "ERROR",
+            Language::Fr => "ERREUR",
+            Language::It => "ERRORE",
+            Language::Es => "ERROR",
+            Language::Zh => "错误",
+            Language::Ru => "ОШИБКА",
+        },
+        "install_failed" => match lang {
+            Language::En => "Installation failed",
+            Language::Fr => "L'installation a échoué",
+            Language::It => "Installazione non riuscita",
+            Language::Es => "La instalación falló",
+            Language::Zh => "安装失败",
+            Language::Ru => "Установка не удалась",
+        },
+        "lyrics_search" => match lang {
+            Language::En => "Searching for lyrics…",
+            Language::Fr => "Recherche des paroles…",
+            Language::It => "Ricerca dei testi…",
+            Language::Es => "Buscando letras…",
+            Language::Zh => "正在搜索歌词…",
+            Language::Ru => "Поиск текста…",
+        },
+        "lyrics_none" => match lang {
+            Language::En => "No lyrics for this track",
+            Language::Fr => "Pas de paroles pour ce titre",
+            Language::It => "Testi non disponibili",
+            Language::Es => "No hay letras",
+            Language::Zh => "此曲目没有歌词",
+            Language::Ru => "Для трека нет текста",
+        },
+        "lyrics_error" => match lang {
+            Language::En => "Lyrics unavailable — click to retry",
+            Language::Fr => "Paroles indisponibles — cliquer pour réessayer",
+            Language::It => "Testi non disponibili",
+            Language::Es => "Letras no disponibles",
+            Language::Zh => "歌词不可用",
+            Language::Ru => "Текст недоступен",
+        },
+        "sync_approx" => match lang {
+            Language::En => "Approximate sync",
+            Language::Fr => "Synchro approximative",
+            Language::It => "Sincronizzazione approssimativa",
+            Language::Es => "Sincronización aproximada",
+            Language::Zh => "同步近似",
+            Language::Ru => "Примерная синхронизация",
+        },
+        "name_placeholder" => match lang {
+            Language::En => "Your name",
+            Language::Fr => "Ton prénom",
+            Language::It => "Il tuo nome",
+            Language::Es => "Tu nombre",
+            Language::Zh => "你的名字",
+            Language::Ru => "Ваше имя",
+        },
+        "name_hint" => match lang {
+            Language::En => "You can change it later.",
+            Language::Fr => "Tu pourras le changer plus tard.",
+            Language::It => "Potrai cambiarlo più tardi.",
+            Language::Es => "Podrás cambiarlo más tarde.",
+            Language::Zh => "以后可以修改。",
+            Language::Ru => "Вы сможете изменить это позже.",
+        },
+        "image_error" => match lang {
+            Language::En => "This image could not be read",
+            Language::Fr => "Cette image n'a pas pu être lue",
+            Language::It => "L'immagine non può essere letta",
+            Language::Es => "No se pudo leer esta imagen",
+            Language::Zh => "无法读取此图片",
+            Language::Ru => "Не удалось прочитать изображение",
+        },
+        "avatar_hint" => match lang {
+            Language::En => "Choose an avatar or drag an image here. Optional.",
+            Language::Fr => "Choisis un avatar, ou glisse une image sur la fenêtre. C'est facultatif.",
+            Language::It => "Scegli un avatar o trascina un'immagine.",
+            Language::Es => "Elige un avatar o arrastra una imagen.",
+            Language::Zh => "选择头像或拖入图片。",
+            Language::Ru => "Выберите аватар или перетащите изображение.",
+        },
+        "preparing" => match lang {
+            Language::En => "Preparing…",
+            Language::Fr => "Préparation…",
+            Language::It => "Preparazione…",
+            Language::Es => "Preparando…",
+            Language::Zh => "准备中…",
+            Language::Ru => "Подготовка…",
+        },
+        "downloading_ytdlp" => match lang {
+            Language::En => "Downloading yt-dlp…",
+            Language::Fr => "Téléchargement de yt-dlp…",
+            Language::It => "Download di yt-dlp…",
+            Language::Es => "Descargando yt-dlp…",
+            Language::Zh => "正在下载 yt-dlp…",
+            Language::Ru => "Загрузка yt-dlp…",
+        },
+        "downloading_ffmpeg" => match lang {
+            Language::En => "Downloading ffmpeg…",
+            Language::Fr => "Téléchargement de ffmpeg…",
+            Language::It => "Download di ffmpeg…",
+            Language::Es => "Descargando ffmpeg…",
+            Language::Zh => "正在下载 ffmpeg…",
+            Language::Ru => "Загрузка ffmpeg…",
+        },
+        "extracting_ffmpeg" => match lang {
+            Language::En => "Extracting ffmpeg…",
+            Language::Fr => "Extraction de ffmpeg…",
+            Language::It => "Estrazione di ffmpeg…",
+            Language::Es => "Extrayendo ffmpeg…",
+            Language::Zh => "正在解压 ffmpeg…",
+            Language::Ru => "Распаковка ffmpeg…",
+        },
+        "verifying" => match lang {
+            Language::En => "Verifying…",
+            Language::Fr => "Vérification…",
+            Language::It => "Verifica…",
+            Language::Es => "Verificando…",
+            Language::Zh => "正在验证…",
+            Language::Ru => "Проверка…",
+        },
+        "ytdlp_start_error" => match lang {
+            Language::En => "yt-dlp does not start after installation",
+            Language::Fr => "yt-dlp ne démarre pas après l'installation",
+            Language::It => "yt-dlp non si avvia",
+            Language::Es => "yt-dlp no inicia",
+            Language::Zh => "yt-dlp 无法启动",
+            Language::Ru => "yt-dlp не запускается",
+        },
+        "ffmpeg_start_error" => match lang {
+            Language::En => "ffmpeg does not start after installation",
+            Language::Fr => "ffmpeg ne démarre pas après l'installation",
+            Language::It => "ffmpeg non si avvia",
+            Language::Es => "ffmpeg no inicia",
+            Language::Zh => "ffmpeg 无法启动",
+            Language::Ru => "ffmpeg не запускается",
+        },
+        "track" => match lang {
+            Language::En => "track",
+            Language::Fr => "titre",
+            Language::It => "brano",
+            Language::Es => "canción",
+            Language::Zh => "曲目",
+            Language::Ru => "трек",
+        },
+        "tracks" => match lang {
+            Language::En => "tracks",
+            Language::Fr => "titres",
+            Language::It => "brani",
+            Language::Es => "canciones",
+            Language::Zh => "曲目",
+            Language::Ru => "треков",
+        },
+        "minutes" => match lang {
+            Language::En => "MIN",
+            Language::Fr => "MIN",
+            Language::It => "MIN",
+            Language::Es => "MIN",
+            Language::Zh => "分钟",
+            Language::Ru => "МИН",
+        },
+        _ => "",
+    }
+}

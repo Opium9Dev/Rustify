@@ -1,0 +1,19 @@
+# Rust build artifacts
+/target/
+
+# Generated releases
+/dist/
+
+# IDE / editor state
+.vscode/
+.idea/
+*.code-workspace
+
+# Windows metadata
+Thumbs.db
+Desktop.ini
+*.lnk
+
+# Crash dumps and local logs
+*.dmp
+*.log
