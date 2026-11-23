@@ -4,6 +4,11 @@
 
 <br/>
 
+<img src="assets/readme/overview.gif" alt="Rustify overview: profiles, tabs and playback" width="800"/>
+
+<br/>
+<br/>
+
 [![Rust](https://img.shields.io/badge/Rust-stable-FF5C34?style=flat-square&logo=rust&logoColor=white)](https://www.rust-lang.org/)
 [![egui](https://img.shields.io/badge/UI-egui-F2EEE6?style=flat-square)](https://github.com/emilk/egui)
 [![Windows](https://img.shields.io/badge/Windows-10%20%7C%2011-0078D4?style=flat-square&logo=windows&logoColor=white)](#install)
@@ -135,7 +140,7 @@ Rustify
 ├── scripts/publish.cmd        release helper (Windows)
 └── src/
     ├── main.rs
-    ├── app.rs                 application state, event loop, installer, cache
+    ├── app.rs                 state, event loop, custom widgets, installer, cache
     ├── discord.rs             Rich Presence
     ├── i18n.rs                translations
     ├── profile.rs
@@ -170,6 +175,8 @@ Still missing: proper Linux and macOS support.
 ## Disclaimer
 
 Rustify is a personal project. It has no link with YouTube, Google or Discord. It relies on third-party tools and public endpoints, and what you play with it is your responsibility, including the terms of the services involved and the copyright rules where you live.
+
+<!-- License: add a LICENSE file, then mention it here. -->
 
 ## Thanks
 
